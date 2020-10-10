@@ -2,6 +2,9 @@
  * SET10110 - ADVANCED GAMES ENGINEERING
  *
  * GRAEME B. WHITE - 40415739
+ * 
+ * DATE OF CREATION: 10/10/2020
+ * DATE LAST MODIFIED: 10/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
