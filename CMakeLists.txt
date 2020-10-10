@@ -11,10 +11,19 @@ set (CMAKE_CXX_STANDARD 11)
 
 ### SOURCE ###
 
-set (STB stb/stb.h stb/stb_image.h stb/stb_image_write.h)
+### STB LIBRARY ###
+set (STB 
+	stb/stb.h 
+	stb/stb_image.h 
+	stb/stb_image_write.h)
 
-set (SOURCE_PATH_TRACER_PROTOTYPE ${STB} PathTracerPrototype/main.cpp)
+### COMMON LIBRARY ###
+set (COMMON 
+	common/vec3.h
+	common/colour.h)
 
+### PATH TRACER PROTOTYPE ###
+set (SOURCE_PATH_TRACER_PROTOTYPE ${STB} ${COMMON} PathTracerPrototype/main.cpp)
 
 # Executables
 add_executable(Path-Tracing_Prototype ${SOURCE_PATH_TRACER_PROTOTYPE})
