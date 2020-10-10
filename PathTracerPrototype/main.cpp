@@ -69,6 +69,9 @@ int main()
 	// Iterate all pixels over image height, starting from the top of the image
 	for (int j = image_height - 1; j >= 0; j--)
 	{
+		// Display progress to the console window
+		cout << "\rScanlines remaining: " << j << ' ' << std::flush;
+
 		// Iterate all pixels over the image width
 		for (int i = 0; i < image_width; i++)
 		{
@@ -103,6 +106,9 @@ int main()
 			ppm << int_r << ' ' << int_g << ' ' << int_b << '\n';
 		}
 	}
+	// End the line on the console window
+	cout << endl;
+
 	// Close the PPM file
 	ppm.close();
 
