@@ -237,7 +237,7 @@ class vec3
  */
 
 // 3D Point
-using point = vec3;
+using point3 = vec3;
 
 // RGB Colour Value
 using colour = vec3;

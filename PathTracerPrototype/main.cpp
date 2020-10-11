@@ -28,6 +28,7 @@
 // Common Library header files
 #include "common/colour.h"
 #include "common/vec3.h"
+#include "common/ray.h"
 
 // STB Library header file
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -37,24 +38,46 @@
 using namespace std;
 
 /*
- * MAIN FUNCTION
+ * RAY COLOUR FUNCTION
  *
- * The first function that is invoked when the application is loaded.
- * 
- * Creates a basic image equivalent of "Hello, World!"depending on the
- * height and width of the image settings.
+ * Function is used to determine and return the
+ * colour of a ray
  */
+colour ray_colour(ray& r)
+{
+	// Determine the unit direction of the ray
+	vec3 unitDirection = unit_vector(r.getDirection());
+
+	// Determine t based on the unit direction
+	auto t = 0.5 * (unitDirection.getY() + 1.0);
+
+	// Determine the colour of the pixel with a linear blend, then return the value
+	return (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
+}
+
+ /*
+  * MAIN FUNCTION
+  *
+  * The first function that is invoked when the application is loaded.
+  *
+  * Creates a basic image equivalent of "Hello, World!"depending on the
+  * height and width of the image settings.
+  */
 int main()
 {
 	// **** IMAGE PROPERTIES **** //
-	// Image Width
-	const int image_width = 1920;
+	
+	// Aspect ratio
+	const auto aspectRatio = 16.0 / 9.0;
+	
+	// Image width
+	const int imageWidth = 400;
 
-	// Image Height
-	const int image_height = 1080;
+	// Determine the image height, based on the image width and aspect ratio
+	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
 
 	// Output file name
-	string fileName = "image";
+	string fileName = "blue";
 
 	// JPG Vector
 	vector<uint8_t> jpgVector;
@@ -62,22 +85,54 @@ int main()
 	// Clear the jpgVector
 	jpgVector.clear();
 
+	// **** CAMERA SETTINGS **** //
+	
+	// Camaiewport height
+	auto viewportHeight = 2.0;
+
+	// Viewport width
+	auto viewportWidth = aspectRatio * viewportHeight;
+
+	// Camera focal length
+	auto focalLength = 1.0;
+
+	// Camera Origin
+	auto origin = point3(0.0f, 0.0f, 0.0f);
+
+	// Horizontal axis of the camera
+	auto horizontal = vec3(viewportWidth, 0, 0);
+
+	// Vertical axis of the camera
+	auto vertical = vec3(0, viewportHeight, 0);
+
+	// Determine the lower left corner of the camera
+	auto lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - vec3(0, 0, focalLength);
+
 	// **** RENDER IMAGE **** //
 
 	// Iterate all pixels over image height, starting from the top of the image
-	for (int j = image_height - 1; j >= 0; j--)
+	for (int j = imageHeight - 1; j >= 0; j--)
 	{
 		// Display progress to the console window
 		cout << "\rScanlines remaining: " << j << ' ' << std::flush;
 
 		// Iterate all pixels over the image width
-		for (int i = 0; i < image_width; i++)
+		for (int i = 0; i < imageWidth; i++)
 		{
-			// For each pixel, determine the RGB values and create a colour vector
-			colour pixel_colour(float(i) / (image_width - 1), float(j) / (image_height - 1), 0.25f);
+			// Determine U value of the pixel
+			auto u =float(i) / (imageWidth - 1);
+
+			// Determine V value of the pixel
+			auto v = float(j) / (imageHeight - 1);
+
+			// Create ray from pixel
+			ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
+
+			// Determine the pixel colour based on the ray
+			colour pixelColour = ray_colour(r);
 
 			// Invoke the write colour function
-			write_colour(pixel_colour, jpgVector);
+			write_colour(pixelColour, jpgVector);
 		}
 	}
 	// End the line on the console window
@@ -98,7 +153,7 @@ int main()
 	jpgFileName[jpgFile.size()] = '\0'; 
 
 	// Create JPG file from the JPG Vector
-	stbi_write_jpg(jpgFileName, image_width, image_height, 3, jpgVector.data(), 100);
+	stbi_write_jpg(jpgFileName, imageWidth, imageHeight, 3, jpgVector.data(), 100);
 
 	// Output message to console indicating that the JPG file has been created
 	cout << "JPG File created" << endl;

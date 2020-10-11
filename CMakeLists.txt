@@ -20,7 +20,8 @@ set (STB
 ### COMMON LIBRARY ###
 set (COMMON 
 	common/vec3.h
-	common/colour.h)
+	common/colour.h
+	common/ray.h)
 
 ### PATH TRACER PROTOTYPE ###
 set (SOURCE_PATH_TRACER_PROTOTYPE ${STB} ${COMMON} PathTracerPrototype/main.cpp)
