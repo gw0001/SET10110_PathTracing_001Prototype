@@ -32,7 +32,8 @@
 /* ==================================================================
  * CAMERA CLASS
  * 
- * 
+ * Class for a camera object. Contains the public functions and 
+ * private variables required for the class
  * ==================================================================
  */
 class camera

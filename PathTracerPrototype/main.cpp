@@ -97,10 +97,10 @@ int main()
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
 
 	// Samples Per Pixel
-	const int samplesPerPixel = 50;
+	const int samplesPerPixel = 5;
 
 	// Output file name
-	string fileName = "sphereAA";
+	string fileName = "sphereAA2";
 
 	// JPG Vector
 	vector<uint8_t> jpgVector;

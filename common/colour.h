@@ -42,25 +42,6 @@ using namespace std;
  */
 void writeColour(colour pixelColour, vector<uint8_t>& jpgVector, int samplesPerPixel) 
 {
-    //// Convert red value to an unsigned 8bit ineger
-    //uint8_t intR = static_cast<uint8_t>(255.999 * pixelColour.getX());
-
-    //// Add the red value to the JPG Vector
-    //jpgVector.push_back(intR);
-
-    //// Convert green value to an unsigned 8bit ineger
-    //uint8_t intG = static_cast<uint8_t>(255.999 * pixelColour.getY());
-
-    //// Add the green value to the JPG Vector
-    //jpgVector.push_back(intG);
-
-    //// Convert blue value to an unsigned 8bit ineger
-    //uint8_t intB = static_cast<uint8_t>(255.999 * pixelColour.getZ());
-
-    //// Add the blue value to the JPG Vector
-    //jpgVector.push_back(intB);
-
-
     // Obtain red value
     auto r = pixelColour.getX();
 
@@ -70,17 +51,18 @@ void writeColour(colour pixelColour, vector<uint8_t>& jpgVector, int samplesPerP
     // Obtain blue value
     auto b = pixelColour.getZ();
 
-    // Determine the scale
+    // Determine the value to scale each pixel
     auto scale = 1.0 / samplesPerPixel;
 
+    // Scale red value
     r *= scale;
+
+    // Scale blue value
     g *= scale;
+
+    // Scale green value
     b *= scale;
     
-    
-    // Convert red value to an unsigned 8bit ineger
-    //uint8_t intR = static_cast<uint8_t>(255.999 * r);
-
     // Convert red value to an unsigned 8bit ineger
     uint8_t intR = static_cast<uint8_t>(256 * clamp(r, 0.0, 0.999));
 
@@ -88,16 +70,10 @@ void writeColour(colour pixelColour, vector<uint8_t>& jpgVector, int samplesPerP
     jpgVector.push_back(intR);
 
     // Convert green value to an unsigned 8bit ineger
-    //uint8_t intG = static_cast<uint8_t>(255.999 * g);
-
-    // Convert green value to an unsigned 8bit ineger
     uint8_t intG = static_cast<uint8_t>(256 * clamp(g, 0.0, 0.999));
 
     // Add the green value to the JPG Vector
     jpgVector.push_back(intG);
-
-    // Convert blue value to an unsigned 8bit ineger
-    //uint8_t intB = static_cast<uint8_t>(255.999 * b);
 
     // Convert blue value to an unsigned 8bit ineger
     uint8_t intB = static_cast<uint8_t>(256 * clamp(b, 0.0, 0.999));
