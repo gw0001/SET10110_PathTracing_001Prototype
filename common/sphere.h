@@ -196,7 +196,6 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const
 		}
 	}
 
-
 	// Return the value held by the check variable
 	return hitSphere;
 }

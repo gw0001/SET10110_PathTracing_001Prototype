@@ -31,6 +31,7 @@
 #include <cmath>
 #include <limits>
 #include <memory>
+#include <cstdlib>
 
 // **** COMMON USINGS **** //
 using std::shared_ptr;
@@ -53,10 +54,63 @@ const float pi = 3.1415926535897932385;
  * Function converts value in degrees to radians
  * and returns the radian value
  */
-inline double degreesToRadians(float degrees)
+inline float degreesToRadians(float degrees)
 {
     // Determine and return the radian value 
     return degrees * pi / 180.0;
+}
+
+/*
+ * RANDOM FLOAT FUNCTION
+ *
+ * Function is used to create a random
+ * float between 0 and 1
+ */
+inline float randomFloat()
+{
+    // Returns a random real in (0,1).
+    return rand() / (RAND_MAX + 1.0);
+}
+
+/*
+ * RANDOM FLOAT FUNCTION
+ *
+ * Function is used to create a random
+ * float between a maximum and minimum
+ * range
+ */
+inline float randomFloat(double min, double max)
+{
+    // Returns a random real in (min,max).
+    return min + (max - min) * randomFloat();
+}
+
+/*
+ * CLAMP FUNCTION
+ * 
+ * Function is used to ensure a value is between a specified
+ * maximum and minimum range. If value, x, is greater, the 
+ * maximum range value is returned. If x is less, the minimum
+ * range value is returned. If x is within range, x is returned
+ */
+inline float clamp(float x, float min, float max)
+{
+    // Check if x is less than the minimum value
+    if (x < min)
+    {
+        // X is less than the minimum, return the minimum value
+        return min;
+    }
+
+    // Check if x is greeater than the maximum value
+    if (x > max)
+    {
+        // x is greater than the maximum, return the maximum value
+        return max;
+    }
+
+    // Return x value
+    return x;
 }
 
 // **** COMMON HEADERS **** //

@@ -30,6 +30,7 @@
 #include "common/colour.h"
 #include "common/hittableList.h"
 #include "common/sphere.h"
+#include "common/camera.h"
 
 // STB Library header file
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -37,49 +38,6 @@
 
 // Namespace
 using namespace std;
-
-///*
-// * HIT SPHERE FUNCTION
-// *
-// * Function is used to determine if a sphere
-// * has been hit by a ray
-// */
-//float hitSphere(const point3& centre, float radius, const ray& r)
-//{
-//	// Hit sphere value
-//	float hitSphereValue = 0;
-//
-//	// Determine the vector from the ray origin to the sphere centre
-//	vec3 oc = r.getOrigin() - centre;
-//
-//	// Determine 'a' component of discriminant of quadratic formula
-//	auto a = r.getDirection().lengthSquared();
-//
-//	// Determine 'b' component of discriminant of quadratic formula
-//	auto halfB = dot(oc, r.getDirection());
-//
-//	// Determine 'c' component of discriminant of quadratic formula
-//	auto c = oc.lengthSquared() - radius * radius;
-//
-//	// Determine the discriminant of the quadratic formula
-//	auto discriminant = halfB * halfB - a * c;
-//
-//	// Check if the determinant is less than 0, to determine if a collision has taken place
-//	if (discriminant < 0)
-//	{
-//		// No collision, set hitSphereValue to -1.0
-//		hitSphereValue = -1.0;
-//	}
-//	else
-//	{
-//		// Collision with sphere, determine the hitSphereValue
-//		hitSphereValue = (-halfB - sqrt(discriminant)) / a;
-//	}
-//
-//	// Return the value held by the check variable
-//	return hitSphereValue;
-//}
-
 
 /*
  * RAY COLOUR FUNCTION
@@ -138,8 +96,11 @@ int main()
 	// Determine the image height, based on the image width and aspect ratio
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
 
+	// Samples Per Pixel
+	const int samplesPerPixel = 50;
+
 	// Output file name
-	string fileName = "sphere";
+	string fileName = "sphereAA";
 
 	// JPG Vector
 	vector<uint8_t> jpgVector;
@@ -148,33 +109,21 @@ int main()
 	jpgVector.clear();
 
 	// **** WORLD PROPERTIES **** //
+	
+	// World hittable list object
 	hittableList world;
+
+	// Create central sphere
 	world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+
+	// Create ground sphere
 	world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
 	// **** CAMERA SETTINGS **** //
 	
-	// Camaiewport height
-	auto viewportHeight = 2.0;
-
-	// Viewport width
-	auto viewportWidth = aspectRatio * viewportHeight;
-
-	// Camera focal length
-	auto focalLength = 1.0;
-
-	// Camera Origin
-	auto origin = point3(0.0f, 0.0f, 0.0f);
-
-	// Horizontal axis of the camera
-	auto horizontal = vec3(viewportWidth, 0, 0);
-
-	// Vertical axis of the camera
-	auto vertical = vec3(0, viewportHeight, 0);
-
-	// Determine the lower left corner of the camera
-	auto lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - vec3(0, 0, focalLength);
-
+	// Camera object
+	camera cam;
+	
 	// **** RENDER IMAGE **** //
 
 	// Iterate all pixels over image height, starting from the top of the image
@@ -186,20 +135,27 @@ int main()
 		// Iterate all pixels over the image width
 		for (int i = 0; i < imageWidth; i++)
 		{
-			// Determine U value of the pixel
-			auto u =float(i) / (imageWidth - 1);
+			// Initialise pixel colour
+			colour pixelColour(0.0f, 0.0f, 0.0f);
 
-			// Determine V value of the pixel
-			auto v = float(j) / (imageHeight - 1);
+			// Iterate pixel over samples per pixel
+			for (int s = 0; s < samplesPerPixel; s++)
+			{
+				// Determine u coordinate of pixel
+				auto u = (i + randomFloat()) / (imageWidth - 1);
 
-			// Create ray from pixel
-			ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
+				// Determine v coordinate of pixel
+				auto v = (j + randomFloat()) / (imageHeight - 1);
 
-			// Determine the pixel colour based on the ray
-			colour pixelColour = rayColour(r, world);
+				// Cast ray from the pixel at (u,v)
+				ray r = cam.getRay(u, v);
+
+				// Determine the pixel colour based on the ray
+				pixelColour += rayColour(r, world);
+			}
 
 			// Invoke the write colour function
-			writeColour(pixelColour, jpgVector);
+			writeColour(pixelColour, jpgVector, samplesPerPixel);
 		}
 	}
 	// End the line on the console window
@@ -224,6 +180,10 @@ int main()
 
 	// Output message to console indicating that the JPG file has been created
 	cout << "JPG File created" << endl;
+
+	cout << "Random Number: "<< randomFloat() << endl;
+
+	cout << "Random Number between 1 and 10: " << randomFloat(1,10) << endl;
 
 	// Return 0 - program is finished, all is OK
 	return 0;

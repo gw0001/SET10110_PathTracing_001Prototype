@@ -20,6 +20,7 @@ set (STB
 ### COMMON LIBRARY ###
 set (COMMON 
 	common/vec3.h
+	common/camera.h
 	common/colour.h
 	common/common.h
 	common/hittable.h
