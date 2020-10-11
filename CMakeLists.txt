@@ -21,6 +21,10 @@ set (STB
 set (COMMON 
 	common/vec3.h
 	common/colour.h
+	common/common.h
+	common/hittable.h
+	common/hittableList.h
+	common/sphere.h
 	common/ray.h)
 
 ### PATH TRACER PROTOTYPE ###

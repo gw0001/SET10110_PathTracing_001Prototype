@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  *
  * DATE OF CREATION: 10/10/2020
- * DATE LAST MODIFIED: 10/10/2020
+ * DATE LAST MODIFIED: 11/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -120,7 +120,7 @@ class vec3
 		 * GET VALUE AT ELEMENT OPERATOR
 		 *
 		 * When invoked, operator returns the value of the 
-		 * element at position i
+		 * element at index i
 		 */
 		float operator[](int i) const 
 		{ 
@@ -132,7 +132,7 @@ class vec3
 		 * GET VALUE AT ELEMENT OPERATOR
 		 *
 		 * When invoked, operator returns the value of the
-		 * element at position i
+		 * element at index i
 		 */
 		float& operator[](int i) 
 		{ 
@@ -205,7 +205,7 @@ class vec3
 		float length() const
 		{
 			// Return the length, by taking the square root of the squared length
-			return sqrt(length_squared());
+			return sqrt(lengthSquared());
 		}
 
 		/*
@@ -214,7 +214,7 @@ class vec3
 		 * Funtion determines the squared length of a 
 		 * vector 
 		 */
-		float length_squared() const
+		float lengthSquared() const
 		{
 			// Determine the length squared via pythagoras theorem
 			float length = (xyz[0] * xyz[0]) + (xyz[1] * xyz[1]) + (xyz[2] * xyz[2]);
@@ -373,7 +373,7 @@ inline vec3 cross(const vec3& vec1, const vec3& vec2)
  * 
  * Funtion determines the unit vector and returns the value
  */
-inline vec3 unit_vector(vec3 vec) 
+inline vec3 unitVector(vec3 vec) 
 {
 	// Determine and return the unit vector
 	return vec / vec.length();

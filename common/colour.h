@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  *
  * DATE OF CREATION: 10/10/2020
- * DATE LAST MODIFIED: 10/10/2020
+ * DATE LAST MODIFIED: 11/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -40,25 +40,25 @@ using namespace std;
  * Function takes in an ostream object and pixel colour vector, 
  * then writes the pixel colour to the ostream object.
  */
-void write_colour(colour pixel_colour, vector<uint8_t> &jpgVector) 
+void writeColour(colour pixel_colour, vector<uint8_t> &jpgVector) 
 {
     // Convert red value to an unsigned 8bit ineger
-    uint8_t int_r = static_cast<uint8_t>(255.999 * pixel_colour.getX());
+    uint8_t intR = static_cast<uint8_t>(255.999 * pixel_colour.getX());
 
     // Add the red value to the JPG Vector
-    jpgVector.push_back(int_r);
+    jpgVector.push_back(intR);
 
     // Convert green value to an unsigned 8bit ineger
-    uint8_t int_g = static_cast<uint8_t>(255.999 * pixel_colour.getY());
+    uint8_t intG = static_cast<uint8_t>(255.999 * pixel_colour.getY());
 
     // Add the green value to the JPG Vector
-    jpgVector.push_back(int_g);
+    jpgVector.push_back(intG);
 
     // Convert blue value to an unsigned 8bit ineger
-    uint8_t int_b = static_cast<uint8_t>(255.999 * pixel_colour.getZ());
+    uint8_t intB = static_cast<uint8_t>(255.999 * pixel_colour.getZ());
 
     // Add the blue value to the JPG Vector
-    jpgVector.push_back(int_b);
+    jpgVector.push_back(intB);
 }
 
 // End ifndef directive for COLOUR_H

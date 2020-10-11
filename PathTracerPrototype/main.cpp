@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  * 
  * DATE OF CREATION: 10/10/2020
- * DATE LAST MODIFIED: 10/10/2020
+ * DATE LAST MODIFIED: 11/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -26,9 +26,10 @@
 #include <string>
 
 // Common Library header files
+#include "common/common.h"
 #include "common/colour.h"
-#include "common/vec3.h"
-#include "common/ray.h"
+#include "common/hittableList.h"
+#include "common/sphere.h"
 
 // STB Library header file
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -37,22 +38,83 @@
 // Namespace
 using namespace std;
 
+///*
+// * HIT SPHERE FUNCTION
+// *
+// * Function is used to determine if a sphere
+// * has been hit by a ray
+// */
+//float hitSphere(const point3& centre, float radius, const ray& r)
+//{
+//	// Hit sphere value
+//	float hitSphereValue = 0;
+//
+//	// Determine the vector from the ray origin to the sphere centre
+//	vec3 oc = r.getOrigin() - centre;
+//
+//	// Determine 'a' component of discriminant of quadratic formula
+//	auto a = r.getDirection().lengthSquared();
+//
+//	// Determine 'b' component of discriminant of quadratic formula
+//	auto halfB = dot(oc, r.getDirection());
+//
+//	// Determine 'c' component of discriminant of quadratic formula
+//	auto c = oc.lengthSquared() - radius * radius;
+//
+//	// Determine the discriminant of the quadratic formula
+//	auto discriminant = halfB * halfB - a * c;
+//
+//	// Check if the determinant is less than 0, to determine if a collision has taken place
+//	if (discriminant < 0)
+//	{
+//		// No collision, set hitSphereValue to -1.0
+//		hitSphereValue = -1.0;
+//	}
+//	else
+//	{
+//		// Collision with sphere, determine the hitSphereValue
+//		hitSphereValue = (-halfB - sqrt(discriminant)) / a;
+//	}
+//
+//	// Return the value held by the check variable
+//	return hitSphereValue;
+//}
+
+
 /*
  * RAY COLOUR FUNCTION
  *
  * Function is used to determine and return the
  * colour of a ray
  */
-colour ray_colour(ray& r)
+colour rayColour(ray& r, const hittable& world)
 {
-	// Determine the unit direction of the ray
-	vec3 unitDirection = unit_vector(r.getDirection());
+	// Create empty ray colour vector
+	colour rayColour;
 
-	// Determine t based on the unit direction
-	auto t = 0.5 * (unitDirection.getY() + 1.0);
+	// Hit Record
+	hitRecord rec;
 
-	// Determine the colour of the pixel with a linear blend, then return the value
-	return (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
+	// Check if an object in the world has been hit
+	if (world.hit(r, 0, infinity, rec))
+	{
+		// Set the ray colour
+		rayColour = 0.5 * (rec.normal + colour(1, 1, 1));
+	}
+	else
+	{
+		// No collision with object, determine the unit direction of the ray
+		vec3 unitDirection = unitVector(r.getDirection());
+
+		// Obtain ray parameter, t
+		auto  t = 0.5 * (unitDirection.getY() + 1.0);
+
+		// Determine the ray colour
+		rayColour = (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
+	}
+
+	// Return the ray colour
+	return rayColour;
 }
 
  /*
@@ -71,19 +133,24 @@ int main()
 	const auto aspectRatio = 16.0 / 9.0;
 	
 	// Image width
-	const int imageWidth = 400;
+	const int imageWidth = 1920;
 
 	// Determine the image height, based on the image width and aspect ratio
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
 
 	// Output file name
-	string fileName = "blue";
+	string fileName = "sphere";
 
 	// JPG Vector
 	vector<uint8_t> jpgVector;
 
 	// Clear the jpgVector
 	jpgVector.clear();
+
+	// **** WORLD PROPERTIES **** //
+	hittableList world;
+	world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+	world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
 	// **** CAMERA SETTINGS **** //
 	
@@ -114,7 +181,7 @@ int main()
 	for (int j = imageHeight - 1; j >= 0; j--)
 	{
 		// Display progress to the console window
-		cout << "\rScanlines remaining: " << j << ' ' << std::flush;
+		cout << "\rScanlines remaining: " << j << ' ' << flush;
 
 		// Iterate all pixels over the image width
 		for (int i = 0; i < imageWidth; i++)
@@ -129,10 +196,10 @@ int main()
 			ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
 
 			// Determine the pixel colour based on the ray
-			colour pixelColour = ray_colour(r);
+			colour pixelColour = rayColour(r, world);
 
 			// Invoke the write colour function
-			write_colour(pixelColour, jpgVector);
+			writeColour(pixelColour, jpgVector);
 		}
 	}
 	// End the line on the console window

@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  *
  * DATE OF CREATION: 10/10/2020
- * DATE LAST MODIFIED: 10/10/2020
+ * DATE LAST MODIFIED: 11/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -17,7 +17,8 @@
  * ==================================================================
  * RAY CLASS AND FILES
  *
- * Header file 
+ * Header file contains the public functions and private variables
+ * for constructing a ray object
  */
 
 // Declare ifndef directive for RAY_H
@@ -83,11 +84,11 @@ class ray
 		 * AT FUNCTION
 		 *
 		 * Function returns the ray's position
-		 * at point, t
+		 * at ray parameter, t
 		 */
 		point3 at(float t) const
 		{
-			// Determine and return the ray's position at time t
+			// Determine and return the ray's position at ray parameter t
 			return orig + t * dir;
 		}
 
