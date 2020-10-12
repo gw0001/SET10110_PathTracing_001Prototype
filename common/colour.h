@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  *
  * DATE OF CREATION: 10/10/2020
- * DATE LAST MODIFIED: 11/10/2020
+ * DATE LAST MODIFIED: 12/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -54,26 +54,26 @@ void writeColour(colour pixelColour, vector<uint8_t>& jpgVector, int samplesPerP
     // Determine the value to scale each pixel
     auto scale = 1.0 / samplesPerPixel;
 
-    // Scale red value
-    r *= scale;
+    // Scale red value and correct gamma for gamma = 2.0
+    r = sqrt(scale * r);
 
-    // Scale blue value
-    g *= scale;
-
-    // Scale green value
-    b *= scale;
-    
     // Convert red value to an unsigned 8bit ineger
     uint8_t intR = static_cast<uint8_t>(256 * clamp(r, 0.0, 0.999));
 
     // Add the red value to the JPG Vector
     jpgVector.push_back(intR);
 
+    // Scale green value and correct gamma for gamma = 2.0
+    g = sqrt(scale * g);
+
     // Convert green value to an unsigned 8bit ineger
     uint8_t intG = static_cast<uint8_t>(256 * clamp(g, 0.0, 0.999));
 
     // Add the green value to the JPG Vector
     jpgVector.push_back(intG);
+
+    // Scale blue value and correct gamma for gamma = 2.0
+    b = sqrt(scale * b);
 
     // Convert blue value to an unsigned 8bit ineger
     uint8_t intB = static_cast<uint8_t>(256 * clamp(b, 0.0, 0.999));

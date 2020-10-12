@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  *
  * DATE OF CREATION: 10/10/2020
- * DATE LAST MODIFIED: 11/10/2020
+ * DATE LAST MODIFIED: 12/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -223,6 +223,31 @@ class vec3
 			return length;
 		}
 
+		/*
+		 * RANDOM FUNCTION
+		 *
+		 * Funtion creates a vector where each component
+		 * has random values between 0 and 1
+		 */
+		inline static vec3 random() 
+		{
+			// Return vector with random values
+			return vec3(randomFloat(), randomFloat(), randomFloat());
+		}
+
+		/*
+		 * RANDOM VECTOR FUNCTION
+		 *
+		 * Funtion creates a vector where each component
+		 * has random values between a specified maximum
+		 * and minimum value
+		 */
+		inline static vec3 randomVector(double min, double max)
+		{
+			// Return vector with random values between a set range
+			return vec3(randomFloat(min, max), randomFloat(min, max), randomFloat(min, max));
+		}
+
 	// Private
 	private:
 		// XYZ component array
@@ -377,6 +402,76 @@ inline vec3 unitVector(vec3 vec)
 {
 	// Determine and return the unit vector
 	return vec / vec.length();
+}
+
+/*
+ * RANDOM IN UNIT SPHERE FUNCTION
+ *
+ * Funtion picks a random point in the 
+ */
+vec3 randomInUnitSphere()
+{
+	// While loop
+	while (true) 
+	{
+		// Obtain random point between -1 and 1
+		auto p = vec3::randomVector(-1, 1);
+
+		// Check if point is in the unit sphere
+		if (p.lengthSquared() >= 1)
+		{
+			// Point is not in the sphere, reject the point and continue
+			continue;
+		}
+
+		// Return the value of P
+		return p;
+	}
+}
+
+/*
+ * RANDOM UNIT VECTOR FUNCTION
+ * 
+ * Function returns a random unit vector
+ */
+vec3 randomUnitVector() 
+{
+	// Obtain random vector with values between 0 and 2*pi
+	auto a = randomFloat(0, 2 * pi);
+
+	// Obtain random vector with values between -1 and 1
+	auto z = randomFloat(-1, 1);
+
+	// Determine r
+	auto r = sqrt(1 - z * z);
+
+	// Return Unit Vector
+	return vec3(r * cos(a), r * sin(a), z);
+}
+
+/*
+ * RANDOM IN HEMISPHERE
+ *
+ * Function returns a random vector from 
+ * hemisphere
+ */
+vec3 randomInHemisphere(const vec3& normal) 
+{
+	// Obtain random vector from sphere
+	vec3 inUnitSphere = randomInUnitSphere();
+
+	// Check if random vector is in the same hemisphere as the normal
+	if (dot(inUnitSphere, normal) > 0.0)
+	{
+		// In the same hemisphere, return the random vector
+		return inUnitSphere;
+	}
+	else
+	{
+		// Not in the same hemisphere, return the inverse of the random vector
+		return -inUnitSphere;
+	}
+
 }
 
 // End ifndef directive for VEC3_H

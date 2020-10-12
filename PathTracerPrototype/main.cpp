@@ -45,34 +45,50 @@ using namespace std;
  * Function is used to determine and return the
  * colour of a ray
  */
-colour rayColour(ray& r, const hittable& world)
+colour rayColour(ray& r, const hittable& world, int depth)
 {
 	// Create empty ray colour vector
-	colour rayColour;
+	colour colourOfRay;
 
 	// Hit Record
 	hitRecord rec;
 
-	// Check if an object in the world has been hit
-	if (world.hit(r, 0, infinity, rec))
+	// Check if depth is less than 0
+	if (depth <= 0)
 	{
-		// Set the ray colour
-		rayColour = 0.5 * (rec.normal + colour(1, 1, 1));
+		// Ray bounce limit, no more light gathered. Set colour to (0.0, 0.0, 0.0)
+		colourOfRay = colour(0.0, 0.0, 0.0);
 	}
+	// Check if an object in the world has been hit (0.001 as tMin to fix shadow acne)
+	else if (world.hit(r, 0.001, infinity, rec))
+	{
+		// Collision detected, obtain target point - Simple Lambertian diffuese reflection
+		//point3 target = rec.p + rec.normal + randomInUnitSphere();
+
+		// Collision detected, obtain target point - True Lambertian diffuese reflection
+		//point3 target = rec.p + rec.normal + randomUnitVector();
+
+		// Collision detected, obtain target point - Alternative Lambertian diffuese reflection
+		point3 target = rec.p + rec.normal + randomInHemisphere(rec.normal);
+
+		// O
+		colourOfRay = 0.5 * rayColour(ray(rec.p, target - rec.p), world, depth - 1);
+	}
+	// No collision with object
 	else
 	{
-		// No collision with object, determine the unit direction of the ray
+		// Determine the unit direction of the ray
 		vec3 unitDirection = unitVector(r.getDirection());
 
 		// Obtain ray parameter, t
 		auto  t = 0.5 * (unitDirection.getY() + 1.0);
 
 		// Determine the ray colour
-		rayColour = (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
+		colourOfRay = (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
 	}
 
 	// Return the ray colour
-	return rayColour;
+	return colourOfRay;
 }
 
  /*
@@ -97,16 +113,19 @@ int main()
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
 
 	// Samples Per Pixel
-	const int samplesPerPixel = 5;
+	const int samplesPerPixel = 100;
+
+	// Maximum depth
+	const int maxDepth = 50;
 
 	// Output file name
-	string fileName = "sphereAA2";
+	string fileName = "proto04";
 
-	// JPG Vector
-	vector<uint8_t> jpgVector;
+	// Image Vector
+	vector<uint8_t> imgVector;
 
 	// Clear the jpgVector
-	jpgVector.clear();
+	imgVector.clear();
 
 	// **** WORLD PROPERTIES **** //
 	
@@ -151,13 +170,14 @@ int main()
 				ray r = cam.getRay(u, v);
 
 				// Determine the pixel colour based on the ray
-				pixelColour += rayColour(r, world);
+				pixelColour += rayColour(r, world, maxDepth);
 			}
 
 			// Invoke the write colour function
-			writeColour(pixelColour, jpgVector, samplesPerPixel);
+			writeColour(pixelColour, imgVector, samplesPerPixel);
 		}
 	}
+
 	// End the line on the console window
 	cout << endl;
 
@@ -176,14 +196,10 @@ int main()
 	jpgFileName[jpgFile.size()] = '\0'; 
 
 	// Create JPG file from the JPG Vector
-	stbi_write_jpg(jpgFileName, imageWidth, imageHeight, 3, jpgVector.data(), 100);
+	stbi_write_jpg(jpgFileName, imageWidth, imageHeight, 3, imgVector.data(), 100);
 
 	// Output message to console indicating that the JPG file has been created
 	cout << "JPG File created" << endl;
-
-	cout << "Random Number: "<< randomFloat() << endl;
-
-	cout << "Random Number between 1 and 10: " << randomFloat(1,10) << endl;
 
 	// Return 0 - program is finished, all is OK
 	return 0;
