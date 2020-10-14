@@ -57,7 +57,7 @@ class sphere : public hittable
 		 * Creates a sphere with centre c and radius r
 		 */
 		sphere(point3 c, float r, shared_ptr<material> m) :
-			centre(c), radius(r), sphereMaterial(m) {};
+			_centre(c), _radius(r), _sphereMaterial(m) {};
 
 		/*
 		 * HIT FUNCTION
@@ -86,13 +86,13 @@ class sphere : public hittable
 	// Private
 	private:
 		// Sphere centre
-		point3 centre;
+		point3 _centre;
 
 		// Sphere radius
-		float radius;
+		float _radius;
 
 		// Material
-		shared_ptr<material> sphereMaterial;
+		shared_ptr<material> _sphereMaterial;
 };
 
 /*
@@ -102,7 +102,7 @@ class sphere : public hittable
  */
 vec3 sphere::getCentre() const
 {
-	return centre;
+	return _centre;
 }
 
 /*
@@ -112,7 +112,7 @@ vec3 sphere::getCentre() const
  */
 float sphere::getRadius() const
 {
-	return radius;
+	return _radius;
 }
 
 /*
@@ -128,7 +128,7 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const
 	bool hitSphere = false;
 
 	// Determine the vector from the ray origin to the sphere centre
-	vec3 oc = r.getOrigin() - centre;
+	vec3 oc = r.getOrigin() - _centre;
 
 	// Determine 'a' component of discriminant of quadratic formula
 	auto a = r.getDirection().lengthSquared();
@@ -137,7 +137,7 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const
 	auto halfB = dot(oc, r.getDirection());
 
 	// Determine 'c' component of discriminant of quadratic formula
-	auto c = oc.lengthSquared() - radius * radius;
+	auto c = oc.lengthSquared() - _radius * _radius;
 
 	// Determine the discriminant of the quadratic formula
 	auto discriminant = (halfB * halfB) - (a * c);
@@ -167,7 +167,7 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const
 			rec.setFaceNormal(r, outwardNormal);
 
 			// Set material
-			rec.materialPointer = sphereMaterial;
+			rec.materialPointer = _sphereMaterial;
 
 			// Set hitableSphere to true
 			hitSphere = true;
@@ -195,7 +195,7 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const
 			rec.setFaceNormal(r, outwardNormal);
 
 			// Set material
-			rec.materialPointer = sphereMaterial;
+			rec.materialPointer = _sphereMaterial;
 
 			// Set hitableSphere to true
 			hitSphere = true;

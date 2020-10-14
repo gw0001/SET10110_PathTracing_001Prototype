@@ -40,8 +40,15 @@ class camera
 {
 	// Public functions
 	public:
+
 		/*
 		 * CAMERA CONSTRUCTOR
+		 * 
+		 * When invoked, creates a camera object and automatically
+		 * sets values for aspect ratio, view port height, viewport
+		 * width, and focal length. Also determines and sets the 
+		 * origin, horizontal axis, vertical axis and the lower 
+		 * left corner.
 		 */
 		camera()
 		{
@@ -58,16 +65,16 @@ class camera
 			auto focalLength = 1.0;
 
 			// Camera Origin
-			origin = point3(0.0f, 0.0f, 0.0f);
+			_origin = point3(0.0f, 0.0f, 0.0f);
 
 			// Horizontal axis of the camera
-			horizontal = vec3(viewportWidth, 0, 0);
+			_horizontal = vec3(viewportWidth, 0, 0);
 
 			// Vertical axis of the camera
-			vertical = vec3(0, viewportHeight, 0);
+			_vertical = vec3(0, viewportHeight, 0);
 
 			// Determine the lower left corner of the camera
-			lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - vec3(0, 0, focalLength);
+			_lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - vec3(0, 0, focalLength);
 		}
 
 		/*
@@ -75,22 +82,22 @@ class camera
 		 */
 		ray getRay(float u, float v) const
 		{
-			return ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
+			return ray(_origin, _lowerLeftCorner + u * _horizontal + v * _vertical - _origin);
 		}
 
 	// Private variables
 	private:
 		// Camera origin
-		point3 origin;
+		point3 _origin;
 
 		// Lower left corner of camera
-		point3 lowerLeftCorner;
+		point3 _lowerLeftCorner;
 
 		// Horizontal axis
-		vec3 horizontal;
+		vec3 _horizontal;
 
 		// Vertical axis
-		vec3 vertical;
+		vec3 _vertical;
 };
 
 // End ifndef directive for CAMERA_H

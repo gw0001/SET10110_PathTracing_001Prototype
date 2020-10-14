@@ -71,7 +71,7 @@ class lambertian : public material
          * When invoked, creates a Lambertian diffuse material object
          * and sets the albedo colour
          */
-        lambertian(const colour& a) : albedo(a) {}
+        lambertian(const colour& a) : _albedo(a) {}
 
         /*
          * SCATTER FUNCTION
@@ -95,7 +95,7 @@ class lambertian : public material
             scattered = ray(rec.p, scatter_direction);
 
             // Set the albedo colour
-            attenuation = albedo;
+            attenuation = _albedo;
 
             // Return true
             return true;
@@ -104,14 +104,14 @@ class lambertian : public material
     // Private variables
     private:
         // Albedo colour
-        colour albedo;
+        colour _albedo;
 };
 
 /* ==================================================================
  * METAL CLASS
  *
- * Metal material class. Contains all functions and variables for 
- * this material
+ * Metal material class, capable of reflecting rays. Contains all
+ * functions and variables for this material
  * ==================================================================
  */
 class metal : public material 
@@ -122,9 +122,9 @@ class metal : public material
          * METAL CONSTRUCTOR
          * 
          * When invoked, creates a metal material object and sets the 
-         * albedo colour
+         * albedo colour and fuzz amount
          */
-        metal(const colour& a, float f) : albedo(a), fuzz(f < 1 ? f : 1) {}
+        metal(const colour& a, float f) : _albedo(a), _fuzz(f < 1 ? f : 1) {}
 
         /*
          * SCATTER FUNCTION
@@ -138,10 +138,10 @@ class metal : public material
             vec3 reflected = reflect(unitVector(r_in.getDirection()), rec.normal);
 
             // Obtain the scattered ray
-            scattered = ray(rec.p, reflected + fuzz * randomInHemisphere(rec.normal));
+            scattered = ray(rec.p, reflected + _fuzz * randomInHemisphere(rec.normal));
             
             // Set the attenuation
-            attenuation = albedo;
+            attenuation = _albedo;
 
             // Return true if the scattered ray is in the same hemisphere as the normal
             return (dot(scattered.getDirection(), rec.normal) > 0);
@@ -150,10 +150,76 @@ class metal : public material
     // Private varialbes
     public:
         // Albedo colour
-        colour albedo;
+        colour _albedo;
 
         // Fuzz value
-        float fuzz;
+        float _fuzz;
+};
+
+/* ==================================================================
+ * DIELECTRIC CLASS
+ *
+ * Dilectric material class, capable of refracting rays. Contains all
+ * functions and variables for this material
+ * ==================================================================
+ */
+class dielectric : public material
+{
+    // Public functions
+    public:
+        /*
+         * DIELECTRIC CONSTRUCTOR
+         * 
+         * When invoked, creates a dielectric materila
+         */
+        dielectric(float ir)
+                : _indexOfRefraction(ir) {};
+
+        /*
+         * SCATTER FUNCTION
+         * 
+         * Function determines if a scatter ray is created when a ray 
+         * collides with the object
+         */
+        virtual bool scatter(const ray& rayIn, const hitRecord& rec, colour& attenuation, ray& scattered) const override
+        {
+            // Set attenuation colour
+            attenuation = colour(1.0, 1.0, 1.0);
+
+            // Determine the Refraction ratio
+            float refractionRatio;
+            //double refractionRatio = rec.frontFace ? (1.0 / _indexOfRefraction) : _indexOfRefraction;
+
+            // Check if front face has been hit
+            if (rec.frontFace == true)
+            {
+                // Front face hit, determine the ratio between air and dielectric material
+                refractionRatio = 1.0 / _indexOfRefraction;
+            }
+            else
+            {
+                // Front face not hit, set refraction ratio to index of refraction (ray inside material)
+                refractionRatio = _indexOfRefraction;
+            }
+
+            // Obtain the unit direction based on the ray
+            vec3 unitDirection = unitVector(rayIn.getDirection());
+
+            // Obtain the refracted ray
+            vec3 refracted = refract(unitDirection, rec.normal, refractionRatio);
+
+            // Determine the scattered ray
+            scattered = ray(rec.p, refracted);
+
+            // Return true
+            return true;
+        }
+
+    // Private functions
+    private:
+
+        // Index of refraction
+        float _indexOfRefraction;
 };
 
 // End ifndef directive for MATERIAL_H

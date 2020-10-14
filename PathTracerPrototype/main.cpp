@@ -116,7 +116,7 @@ int main()
 	const auto aspectRatio = 16.0 / 9.0;
 	
 	// Image width
-	const int imageWidth = 1920;
+	const int imageWidth = 200;
 
 	// Determine the image height, based on the image width and aspect ratio
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
@@ -128,7 +128,7 @@ int main()
 	const int maxDepth = 50;
 
 	// Output file name
-	string fileName = "proto09";
+	string fileName = "proto10";
 
 	// Image Vector
 	vector<uint8_t> imgVector;
@@ -158,10 +158,10 @@ int main()
 	auto groundSphere = make_shared<lambertian>(colour(0.988, 0.0, 0.992));
 
 	// Centre Sphere - Lambertian material
-	auto centreSphere = make_shared<lambertian>(colour(0.867, 0.992, 0.281));
+	auto centreSphere = make_shared<dielectric>(1.5);
 
 	// Left Sphere - Metal material
-	auto leftSphere = make_shared<metal>(colour(0.0, 0.699, 0.996), 0.25);
+	auto leftSphere = make_shared<dielectric>(1.5);
 
 	// Right Sphere - metal material
 	auto rightSphere = make_shared<metal>(colour(0.0, 0.086, 0.926), 0.8);

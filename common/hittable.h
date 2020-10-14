@@ -103,6 +103,11 @@ struct hitRecord
 class hittable
 {
 	public:
+		/*
+		 * HIT FUNCTION
+		 * 
+		 * Function determines if an object has been hit by a ray
+		 */
 		virtual bool hit(const ray& r, float tMin, float tMax, hitRecord& rec) const = 0;
 };
 

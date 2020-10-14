@@ -58,7 +58,7 @@ class vec3
 		 * and Z components are all set to 0.0f
 		 */
 		vec3() : 
-			xyz{ 0.0f, 0.0f, 0.0f } {}
+			_xyz{ 0.0f, 0.0f, 0.0f } {}
 
 		/*
 		 * VEC3 CONSTRUCTOR
@@ -68,7 +68,7 @@ class vec3
 		 * values from the arguments
 		 */
 		vec3(float x, float y, float z) : 
-			xyz{ x, y, z } {}
+			_xyz{ x, y, z } {}
 
 		/*
 		 * GET X FUNCTION
@@ -78,7 +78,7 @@ class vec3
 		float getX() const 
 		{
 			// Return the X component value
-			return xyz[0]; 
+			return _xyz[0]; 
 		}
 
 		/*
@@ -89,7 +89,7 @@ class vec3
 		float getY() const 
 		{ 
 			// Return the Y component value
-			return xyz[1]; 
+			return _xyz[1]; 
 		}
 
 		/*
@@ -100,7 +100,7 @@ class vec3
 		float getZ() const 
 		{ 
 			// Return the Z component value
-			return xyz[2]; 
+			return _xyz[2]; 
 		}
 
 		/*
@@ -113,7 +113,7 @@ class vec3
 		vec3 operator-() const 
 		{ 
 			// Return the inverted vector
-			return vec3(-xyz[0], -xyz[1], -xyz[2]); 
+			return vec3(-_xyz[0], -_xyz[1], -_xyz[2]); 
 		}
 
 		/*
@@ -125,7 +125,7 @@ class vec3
 		float operator[](int i) const 
 		{ 
 			// Return the value at index i
-			return xyz[i]; 
+			return _xyz[i]; 
 		}
 
 		/*
@@ -137,7 +137,7 @@ class vec3
 		float& operator[](int i) 
 		{ 
 			// Return the value at index i
-			return xyz[i]; 
+			return _xyz[i]; 
 		}
 
 		/*
@@ -150,13 +150,13 @@ class vec3
 		vec3& operator+=(const vec3& v) 
 		{
 			// Add X components
-			xyz[0] += v.xyz[0];
+			_xyz[0] += v._xyz[0];
 
 			// Add Y components
-			xyz[1] += v.xyz[1];
+			_xyz[1] += v._xyz[1];
 
 			// Add Z components
-			xyz[2] += v.xyz[2];
+			_xyz[2] += v._xyz[2];
 
 			// Return this vector
 			return *this;
@@ -172,13 +172,13 @@ class vec3
 		vec3& operator*=(const float s)
 		{
 			// Add X components
-			xyz[0] *= s;
+			_xyz[0] *= s;
 
 			// Add Y components
-			xyz[1] *= s;
+			_xyz[1] *= s;
 
 			// Add Z components
-			xyz[2] *= s;
+			_xyz[2] *= s;
 
 			// Return this vector
 			return *this;
@@ -217,7 +217,7 @@ class vec3
 		float lengthSquared() const
 		{
 			// Determine the length squared via pythagoras theorem
-			float length = (xyz[0] * xyz[0]) + (xyz[1] * xyz[1]) + (xyz[2] * xyz[2]);
+			float length = (_xyz[0] *_xyz[0]) + (_xyz[1] * _xyz[1]) + (_xyz[2] * _xyz[2]);
 			
 			// Return length
 			return length;
@@ -251,7 +251,7 @@ class vec3
 	// Private
 	private:
 		// XYZ component array
-		float xyz[3];
+		float _xyz[3];
 };
 
 /* ==================================================================
@@ -483,6 +483,27 @@ vec3 reflect(const vec3& v, const vec3& n)
 {
 	// Determine and return the reflected vector
 	return v - 2 * dot(v, n) * n;
+}
+
+/*
+ * REFRACT FUNCTION
+ * 
+ * Function based on Snell's law to produce a 
+ * refracted vector
+ */
+vec3 refract(const vec3& uv, const vec3& n, float eta1DivEta2)
+{
+	// Determine angle between vector and normal
+	auto cosTheta = dot(-uv, n);
+
+	// Determine the vector perpendicular to the refracted normal
+	vec3 rOutPerpendicular = eta1DivEta2 * (uv + cosTheta * n);
+
+	// Determine the parallel component of the refracted normal
+	vec3 rOutParallel = -sqrt(fabs(1.0 - rOutPerpendicular.lengthSquared())) * n;
+
+	// Determine and return the refracted vector
+	return rOutPerpendicular + rOutParallel;
 }
 
 // End ifndef directive for VEC3_H

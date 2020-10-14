@@ -51,56 +51,58 @@ using std::make_shared;
 class hittableList : public hittable
 {
 	// Public
-public:
-	/*
-	 * DEFAULT HITTABLE LIST CONSTRUCTOR
-	 *
-	 * When invoked, creates an empty hittable list object
-	 */
-	hittableList() {}
+	public:
+		/*
+		 * DEFAULT HITTABLE LIST CONSTRUCTOR
+		 *
+		 * When invoked, creates an empty hittable list object
+		 */
+		hittableList() {}
 
-	/*
-	 * HITTABLE LIST CONSTRUCTOR
-	 *
-	 * Constructor creates a hittable list object and
-	 * adds an object to the objects list
-	 */
-	hittableList(shared_ptr<hittable> object) { add(object); };
+		/*
+		 * HITTABLE LIST CONSTRUCTOR
+		 *
+		 * Constructor creates a hittable list object and
+		 * adds an object to the objects list
+		 */
+		hittableList(shared_ptr<hittable> object) { add(object); };
 
-	/*
-	 * CLEAR FUNCTION
-	 *
-	 * Function clears all entries from the
-	 * list of objects
-	 */
-	void clear()
-	{
-		objects.clear();
-	}
+		/*
+		 * CLEAR FUNCTION
+		 *
+		 * Function clears all entries from the
+		 * list of objects
+		 */
+		void clear()
+		{
+			// Clear the object vector
+			_objects.clear();
+		}
 
-	/*
-	 * ADD FUNCTION
-	 *
-	 * Function adds an object to the
-	 * list of objects
-	 */
-	void add(shared_ptr<hittable> object)
-	{
-		objects.push_back(object);
-	}
+		/*
+		 * ADD FUNCTION
+		 *
+		 * Function adds an object to the
+		 * list of objects
+		 */
+		void add(shared_ptr<hittable> object)
+		{
+			// Push back object to the object vector
+			_objects.push_back(object);
+		}
 
-	/*
-	 * HIT FUNCTION
-	 *
-	 * Function determines if an object has been hit by a ray
-	 */
-	virtual bool hit(const ray& r, float tMin, float tMax, hitRecord& rec) const override;
+		/*
+		 * HIT FUNCTION
+		 *
+		 * Function determines if an object has been hit by a ray
+		 */
+		virtual bool hit(const ray& r, float tMin, float tMax, hitRecord& rec) const override;
 
 
-	// Private variables
-private:
-	// 
-	vector<shared_ptr<hittable>> objects;
+		// Private variables
+	private:
+		// 
+		vector<shared_ptr<hittable>> _objects;
 };
 
 /*
@@ -120,7 +122,7 @@ bool hittableList::hit(const ray& r, float tMin, float tMax, hitRecord& rec) con
 	auto closestSoFar = tMax;
 
 	// Examine each object in objects list
-	for (const auto& object : objects)
+	for (const auto& object : _objects)
 	{
 		// Check if object has been hit by a ray
 		if (object->hit(r, tMin, closestSoFar, tempRec) == true)
@@ -142,3 +144,98 @@ bool hittableList::hit(const ray& r, float tMin, float tMax, hitRecord& rec) con
 
 // End ifndef directive of HITTABLE_LIST_H
 #endif HITTABLE_LIST_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Go away

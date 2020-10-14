@@ -56,7 +56,7 @@ class ray
 		 * ray
 		 */
 		ray(const point3& origin, const vec3& direction) 
-		 :orig(origin), dir(direction) {}
+			: _orig(origin), _dir(direction) {}
 
 		/*
 		 * GET ORIGIN FUNCTION
@@ -66,7 +66,7 @@ class ray
 		point3 getOrigin() const
 		{
 			// Return the origin point
-			return orig;
+			return _orig;
 		}
 
 		/*
@@ -77,7 +77,7 @@ class ray
 		vec3 getDirection() const
 		{
 			// Return the direction of the ray
-			return dir;
+			return _dir;
 		}
 
 		/*
@@ -89,17 +89,17 @@ class ray
 		point3 at(float t) const
 		{
 			// Determine and return the ray's position at ray parameter t
-			return orig + t * dir;
+			return _orig + t * _dir;
 		}
 
 	// Private variables
 	private:
 
 		// Ray point of origin
-		point3 orig;
+		point3 _orig;
 
 		// Ray direction
-		vec3 dir;
+		vec3 _dir;
 };
 
 // End ifndef directive for RAY_H
