@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  * 
  * DATE OF CREATION: 10/10/2020
- * DATE LAST MODIFIED: 11/10/2020
+ * DATE LAST MODIFIED: 14/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -31,6 +31,7 @@
 #include "common/hittableList.h"
 #include "common/sphere.h"
 #include "common/camera.h"
+#include "common/material.h"
 
 // STB Library header file
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -62,17 +63,25 @@ colour rayColour(ray& r, const hittable& world, int depth)
 	// Check if an object in the world has been hit (0.001 as tMin to fix shadow acne)
 	else if (world.hit(r, 0.001, infinity, rec))
 	{
-		// Collision detected, obtain target point - Simple Lambertian diffuese reflection
-		//point3 target = rec.p + rec.normal + randomInUnitSphere();
+		// Set the scattered colour to black
+		colour scatteredColour(0.0, 0.0, 0.0);
 
-		// Collision detected, obtain target point - True Lambertian diffuese reflection
-		//point3 target = rec.p + rec.normal + randomUnitVector();
+		// Empty scattered ray object
+		ray scattered;
 
-		// Collision detected, obtain target point - Alternative Lambertian diffuese reflection
-		point3 target = rec.p + rec.normal + randomInHemisphere(rec.normal);
+		// Empty attenuation colour
+		colour attenuation;
 
-		// O
-		colourOfRay = 0.5 * rayColour(ray(rec.p, target - rec.p), world, depth - 1);
+		// Check if a scattered ray is created upon collision
+		if (rec.materialPointer->scatter(r, rec, attenuation, scattered))
+		{
+			// Scattered ray is true, obtain the scattered ray colour
+			scatteredColour = attenuation * rayColour(scattered, world, depth - 1);
+		}
+		
+		// Set the colour of the ray to the scattered ray colour
+		colourOfRay = scatteredColour;
+
 	}
 	// No collision with object
 	else
@@ -119,7 +128,7 @@ int main()
 	const int maxDepth = 50;
 
 	// Output file name
-	string fileName = "proto04";
+	string fileName = "proto09";
 
 	// Image Vector
 	vector<uint8_t> imgVector;
@@ -132,11 +141,43 @@ int main()
 	// World hittable list object
 	hittableList world;
 
-	// Create central sphere
-	world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+	//// Ground sphere - Lambertian material
+	//auto groundSphere = make_shared<lambertian>(colour(0.8, 0.8, 0.0));
 
-	// Create ground sphere
-	world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+	//// Centre Sphere - Lambertian material
+	//auto centreSphere = make_shared<lambertian>(colour(0.7, 0.3, 0.3));
+
+	//// Left Sphere - Metal material
+	//auto leftSphere = make_shared<metal>(colour(0.8, 0.8, 0.8), 0.3);
+
+	//// Right Sphere - metal material
+	//auto rightSphere = make_shared<metal>(colour(0.8, 0.6, 0.2), 1.0);
+
+	// V A P O R W A V E A S T H E T I C
+	// Ground sphere - Lambertian material
+	auto groundSphere = make_shared<lambertian>(colour(0.988, 0.0, 0.992));
+
+	// Centre Sphere - Lambertian material
+	auto centreSphere = make_shared<lambertian>(colour(0.867, 0.992, 0.281));
+
+	// Left Sphere - Metal material
+	auto leftSphere = make_shared<metal>(colour(0.0, 0.699, 0.996), 0.25);
+
+	// Right Sphere - metal material
+	auto rightSphere = make_shared<metal>(colour(0.0, 0.086, 0.926), 0.8);
+
+
+	// Add ground sphere to the world list
+	world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, groundSphere));
+
+	// Add centre sphere to the world list
+	world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, centreSphere));
+
+	// Add left sphere to the world list
+	world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, leftSphere));
+
+	// Add right sphere to the world list
+	world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, rightSphere));
 
 	// **** CAMERA SETTINGS **** //
 	

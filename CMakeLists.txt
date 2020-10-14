@@ -25,6 +25,7 @@ set (COMMON
 	common/common.h
 	common/hittable.h
 	common/hittableList.h
+	common/material.h
 	common/sphere.h
 	common/ray.h)
 

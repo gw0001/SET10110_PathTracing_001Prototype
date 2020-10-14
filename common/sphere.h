@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  *
  * DATE OF CREATION: 11/10/2020
- * DATE LAST MODIFIED: 11/10/2020
+ * DATE LAST MODIFIED: 14/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -56,8 +56,8 @@ class sphere : public hittable
 		 * 
 		 * Creates a sphere with centre c and radius r
 		 */
-		sphere(point3 c, float r) :
-			centre(c), radius(r) {};
+		sphere(point3 c, float r, shared_ptr<material> m) :
+			centre(c), radius(r), sphereMaterial(m) {};
 
 		/*
 		 * HIT FUNCTION
@@ -90,6 +90,9 @@ class sphere : public hittable
 
 		// Sphere radius
 		float radius;
+
+		// Material
+		shared_ptr<material> sphereMaterial;
 };
 
 /*
@@ -163,6 +166,9 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const
 			// Determine if the face is facing the front, determine the normal, and record the normal
 			rec.setFaceNormal(r, outwardNormal);
 
+			// Set material
+			rec.materialPointer = sphereMaterial;
+
 			// Set hitableSphere to true
 			hitSphere = true;
 			
@@ -187,6 +193,9 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const
 
 			// Determine if the face is facing the front, determine the normal, and record the normal
 			rec.setFaceNormal(r, outwardNormal);
+
+			// Set material
+			rec.materialPointer = sphereMaterial;
 
 			// Set hitableSphere to true
 			hitSphere = true;

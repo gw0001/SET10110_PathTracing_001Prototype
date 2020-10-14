@@ -450,7 +450,7 @@ vec3 randomUnitVector()
 }
 
 /*
- * RANDOM IN HEMISPHERE
+ * RANDOM IN HEMISPHERE FUNCTION
  *
  * Function returns a random vector from 
  * hemisphere
@@ -471,7 +471,18 @@ vec3 randomInHemisphere(const vec3& normal)
 		// Not in the same hemisphere, return the inverse of the random vector
 		return -inUnitSphere;
 	}
+}
 
+/*
+ * REFLECT FUNCTION
+ *
+ * Function used to determine the reflected
+ * vector
+ */
+vec3 reflect(const vec3& v, const vec3& n) 
+{
+	// Determine and return the reflected vector
+	return v - 2 * dot(v, n) * n;
 }
 
 // End ifndef directive for VEC3_H

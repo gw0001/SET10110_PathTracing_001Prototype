@@ -4,7 +4,7 @@
  * GRAEME B. WHITE - 40415739
  *
  * DATE OF CREATION: 11/10/2020
- * DATE LAST MODIFIED: 11/10/2020
+ * DATE LAST MODIFIED: 14/10/2020
  * ==================================================================
  * PATH-TRACING PROTOTYPE
  *
@@ -27,7 +27,11 @@
 #define HITTABLE_H
 
 // Header files
+#include "common.h"
 #include "ray.h"
+
+// Forward declaration of Material class
+class material;
 
 /*
  * ==================================================================
@@ -43,6 +47,9 @@ struct hitRecord
 
 	// Normal
 	vec3 normal;
+
+	// Material shared pointer
+	shared_ptr<material> materialPointer;
 
 	// Ray parameter
 	float t;
@@ -72,7 +79,7 @@ struct hitRecord
 		}
 
 		// Set the value of the normal, depending on the value of frontFace
-		if (frontFace = true)
+		if (frontFace == true)
 		{
 			// Front face, Set normal to the outward normal
 			normal = outwardNormal;
