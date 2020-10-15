@@ -50,7 +50,7 @@ class camera
 		 * origin, horizontal axis, vertical axis and the lower 
 		 * left corner.
 		 */
-		camera(point3& lookFrom, point3 lookAt, vec3 verticalUp, float verticalFoV, float aspectRatio)
+		camera(point3& lookFrom, point3 lookAt, vec3 verticalUp, float verticalFoV, float aspectRatio, float aperture, float focusDistance)
 		{
 			// Determine theta in radians
 			auto theta = degreesToRadians(verticalFoV);
@@ -64,26 +64,29 @@ class camera
 			// Determine the viewport width
 			auto viewportWidth = aspectRatio * viewportHeight;
 
-			// Determine w component of orthogonal camera
-			auto w = unitVector(lookFrom - lookAt);
+			// Determine and set w component of orthogonal camera
+			_w = unitVector(lookFrom - lookAt);
 
-			// Determine u component of orthogonal camera
-			auto u = unitVector(cross(verticalUp, w));
+			// Determine and set u component of orthogonal camera
+			_u = unitVector(cross(verticalUp, _w));
 
-			// Determine v component of orthogonal camera
-			auto v = cross(w, u);
+			// Determine and set v component of orthogonal camera
+			_v = cross(_w, _u);
 
 			// Set the origin of the camera
 			_origin = lookFrom;
 
 			// Set the horizontal axis of the camera
-			_horizontal = viewportWidth * u;
+			_horizontal = focusDistance * viewportWidth * _u;
 
 			// Set the vertical axis of the camera
-			_vertical = viewportHeight * v;
+			_vertical = focusDistance * viewportHeight * _v;
 
 			// Determine and set the lower left corner of the camera viewport
-			_lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - w;
+			_lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - focusDistance * _w;
+
+			// Determine and set the lens radius
+			_lensRadius = aperture / 2;
 		}
 
 		/*
@@ -91,10 +94,16 @@ class camera
 		 * 
 		 * Function returns a ray from the camera, based on u, v coordinates
 		 */
-		ray getRay(float u, float v) const
+		ray getRay(float s, float t) const
 		{
+			// Determine rd
+			vec3 rd = _lensRadius * randomInUnitDisk();
+
+			// Determine the offset
+			vec3 offset = _u * rd.getX() + _v * rd.getY();
+
 			// Return ray, based on camera position
-			return ray(_origin, _lowerLeftCorner + u * _horizontal + v * _vertical - _origin);
+			return ray(_origin + offset, _lowerLeftCorner + s * _horizontal + t * _vertical - _origin - offset);
 		}
 
 	// Private variables
@@ -110,6 +119,12 @@ class camera
 
 		// Vertical axis
 		vec3 _vertical;
+
+		// u, v, and w vectors
+		vec3 _u, _v, _w;
+
+		// Lens redius
+		float _lensRadius;
 };
 
 // End ifndef directive for CAMERA_H

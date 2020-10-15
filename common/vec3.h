@@ -248,6 +248,8 @@ class vec3
 			return vec3(randomFloat(min, max), randomFloat(min, max), randomFloat(min, max));
 		}
 
+
+
 	// Private
 	private:
 		// XYZ component array
@@ -511,6 +513,31 @@ vec3 refract(const vec3& uv, const vec3& n, float eta1DivEta2)
 
 	// Determine and return the refracted vector
 	return rOutPerpendicular + rOutParallel;
+}
+
+/*
+ * RANDOM IN UNIT DISK FUNCTION
+ * 
+ * Function returns a vector that is found in a 
+ */
+vec3 randomInUnitDisk()
+{
+	// While true loop
+	while (true) 
+	{
+		// Obtain a vector with random x and y values
+		auto p = vec3(randomFloat(-1, 1), randomFloat(-1, 1), 0);
+		
+		// Check if the lenght of the vector is greater than, or equal to, 1
+		if (p.lengthSquared() >= 1)
+		{
+			// Reject the vector and continue
+			continue;
+		}
+
+		// Return vector
+		return p;
+	}
 }
 
 // End ifndef directive for VEC3_H

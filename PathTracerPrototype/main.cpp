@@ -128,7 +128,7 @@ int main()
 	const int maxDepth = 50;
 
 	// Output file name
-	string fileName = "protoCam01";
+	string fileName = "proto13";
 
 	// Image Vector
 	vector<uint8_t> imgVector;
@@ -166,7 +166,7 @@ int main()
 	// Right Sphere - metal material
 	auto rightSphere = make_shared<metal>(colour(0.0, 0.086, 0.926), 0.8);
 
-
+	// Sphere objects
 	// Add ground sphere to the world list
 	world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, groundSphere));
 
@@ -186,8 +186,26 @@ int main()
 
 	// **** CAMERA SETTINGS **** //
 	
+	// Camera looking from
+	point3 lookFrom(3, 3, 2);
+
+	// Camera look at
+	point3 lookAt(0, 0, -1);
+	
+	// Camera vertical up
+	vec3 verticalUp(0, 1, 0);
+
+	// Vertical Field of View
+	float verticalFoV = 20.0;
+
+	// Distance to focus
+	auto distanceToFocus = (lookFrom - lookAt).length();
+
+	// Camera Aperture
+	float aperture = 2.0;
+
 	// Camera object
-	camera cam(point3(-2, 2, 1), point3(0, 0, -1), vec3 (0, 1, 0), 20.0, aspectRatio);
+	camera cam(lookFrom, lookAt, verticalUp, verticalFoV, aspectRatio, aperture, distanceToFocus);
 	
 	// **** RENDER IMAGE **** //
 
