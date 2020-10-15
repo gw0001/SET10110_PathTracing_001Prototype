@@ -170,7 +170,7 @@ class dielectric : public material
         /*
          * DIELECTRIC CONSTRUCTOR
          * 
-         * When invoked, creates a dielectric materila
+         * When invoked, creates a dielectric material 
          */
         dielectric(float ir)
                 : _indexOfRefraction(ir) {};
@@ -205,6 +205,33 @@ class dielectric : public material
             // Obtain the unit direction based on the ray
             vec3 unitDirection = unitVector(rayIn.getDirection());
 
+            // Determine Cos Theta
+            double cosTheta = fmin(dot(-unitDirection, rec.normal), 1.0);
+
+            // Determine Sin of Theta
+            double sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+
+            // Obtain the value of Cannot Refract
+            bool cannotRefract = refractionRatio * sinTheta > 1.0;
+            
+            // Empty direction vector
+            vec3 direction;
+
+            // Check if ray cannot be refracted or if reflectances is greater than a random float between 0 and 1
+            if (cannotRefract || reflectance(cosTheta, refractionRatio) > randomFloat())
+            {
+                // Cannot refract, obtain reflection
+                direction = reflect(unitDirection, rec.normal);
+            }
+            else
+            {
+                // Can refract, obtain refraction
+                direction = refract(unitDirection, rec.normal, refractionRatio);
+            }
+
+            // Obtain the scattered ray
+            scattered = ray(rec.p, direction);
+
             // Obtain the refracted ray
             vec3 refracted = refract(unitDirection, rec.normal, refractionRatio);
 
@@ -220,7 +247,24 @@ class dielectric : public material
 
         // Index of refraction
         float _indexOfRefraction;
+
+        /*
+         * REFLECTANCE FUNCTION
+         * 
+         * Function uses Schlick's approximation for reflectance
+         */
+        static float reflectance(float cosine, float refractanceIndex)
+        {
+            // Determine value of r0
+            auto r0 = (1 - refractanceIndex) / (1 + refractanceIndex);
+
+            // Determine value of r0 squared
+            auto r0Squared = r0 * r0;
+
+            // Return 
+            return r0Squared + (1 - r0Squared) * pow((1 - cosine), 5);
+        }
 };
 
 // End ifndef directive for MATERIAL_H
-#endif MATERIAL_H
+#endif

@@ -158,7 +158,7 @@ int main()
 	auto groundSphere = make_shared<lambertian>(colour(0.988, 0.0, 0.992));
 
 	// Centre Sphere - Lambertian material
-	auto centreSphere = make_shared<dielectric>(1.5);
+	auto centreSphere = make_shared<lambertian>(colour(0.867, 0.992, 0.281));
 
 	// Left Sphere - Metal material
 	auto leftSphere = make_shared<dielectric>(1.5);
@@ -175,6 +175,11 @@ int main()
 
 	// Add left sphere to the world list
 	world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, leftSphere));
+
+	// Add inverse left sphere to the world list - using negative radius for the hollow part
+	// of the glass sphere. The negative number doesn't affect the geometry, but it will 
+	// cause the normals to point inwards
+	world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, leftSphere));
 
 	// Add right sphere to the world list
 	world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, rightSphere));

@@ -210,4 +210,4 @@ bool sphere::hit(const ray& r, float tMin, float tMax, hitRecord& rec) const
 }
 
 // End ifndef directive for HITTABLE_SPHERE_H
-#endif SPHERE_H
+#endif

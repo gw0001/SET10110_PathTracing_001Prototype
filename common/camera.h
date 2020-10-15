@@ -79,9 +79,12 @@ class camera
 
 		/*
 		 * GET RAY FUNCTION
+		 * 
+		 * Function returns a ray from the camera, based on u, v coordinates
 		 */
 		ray getRay(float u, float v) const
 		{
+			// Return ray, based on camera position
 			return ray(_origin, _lowerLeftCorner + u * _horizontal + v * _vertical - _origin);
 		}
 
@@ -101,4 +104,4 @@ class camera
 };
 
 // End ifndef directive for CAMERA_H
-#endif CAMERA_H
+#endif

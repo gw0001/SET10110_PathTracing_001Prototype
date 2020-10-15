@@ -103,4 +103,4 @@ class ray
 };
 
 // End ifndef directive for RAY_H
-#endif RAY_H
+#endif

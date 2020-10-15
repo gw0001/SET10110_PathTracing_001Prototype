@@ -143,7 +143,7 @@ bool hittableList::hit(const ray& r, float tMin, float tMax, hitRecord& rec) con
 }
 
 // End ifndef directive of HITTABLE_LIST_H
-#endif HITTABLE_LIST_H
+#endif
 
 
 

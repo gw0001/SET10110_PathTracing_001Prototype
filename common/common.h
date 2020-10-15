@@ -122,4 +122,4 @@ inline float clamp(float x, float min, float max)
 #include "vec3.h"
 
 // End ifndef directive for COMMON_H
-#endif COMMON_H
+#endif

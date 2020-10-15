@@ -83,4 +83,4 @@ void writeColour(colour pixelColour, vector<uint8_t>& jpgVector, int samplesPerP
 }
 
 // End ifndef directive for COLOUR_H
-#endif COLOUR_H
+#endif

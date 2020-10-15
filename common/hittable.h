@@ -112,4 +112,4 @@ class hittable
 };
 
 // End ifndef directive for HITTABLE_H
-#endif HITTABLE_H
+#endif

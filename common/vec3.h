@@ -507,4 +507,4 @@ vec3 refract(const vec3& uv, const vec3& n, float eta1DivEta2)
 }
 
 // End ifndef directive for VEC3_H
-#endif VEC3_H
+#endif
