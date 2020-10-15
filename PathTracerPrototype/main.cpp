@@ -116,7 +116,7 @@ int main()
 	const auto aspectRatio = 16.0 / 9.0;
 	
 	// Image width
-	const int imageWidth = 200;
+	const int imageWidth = 400;
 
 	// Determine the image height, based on the image width and aspect ratio
 	const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
@@ -128,7 +128,7 @@ int main()
 	const int maxDepth = 50;
 
 	// Output file name
-	string fileName = "proto10";
+	string fileName = "protoCam01";
 
 	// Image Vector
 	vector<uint8_t> imgVector;
@@ -187,7 +187,7 @@ int main()
 	// **** CAMERA SETTINGS **** //
 	
 	// Camera object
-	camera cam;
+	camera cam(point3(-2, 2, 1), point3(0, 0, -1), vec3 (0, 1, 0), 20.0, aspectRatio);
 	
 	// **** RENDER IMAGE **** //
 

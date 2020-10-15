@@ -50,31 +50,40 @@ class camera
 		 * origin, horizontal axis, vertical axis and the lower 
 		 * left corner.
 		 */
-		camera()
+		camera(point3& lookFrom, point3 lookAt, vec3 verticalUp, float verticalFoV, float aspectRatio)
 		{
-			// Aspect ratio
-			const auto aspectRatio = 16.0 / 9.0;
+			// Determine theta in radians
+			auto theta = degreesToRadians(verticalFoV);
 
-			// Camaiewport height
-			auto viewportHeight = 2.0;
+			// Determine h
+			auto h = tan(theta / 2);
 
-			// Viewport width
+			// Dtermine the viewport height
+			auto viewportHeight = 2 * h;
+
+			// Determine the viewport width
 			auto viewportWidth = aspectRatio * viewportHeight;
 
-			// Camera focal length
-			auto focalLength = 1.0;
+			// Determine w component of orthogonal camera
+			auto w = unitVector(lookFrom - lookAt);
 
-			// Camera Origin
-			_origin = point3(0.0f, 0.0f, 0.0f);
+			// Determine u component of orthogonal camera
+			auto u = unitVector(cross(verticalUp, w));
 
-			// Horizontal axis of the camera
-			_horizontal = vec3(viewportWidth, 0, 0);
+			// Determine v component of orthogonal camera
+			auto v = cross(w, u);
 
-			// Vertical axis of the camera
-			_vertical = vec3(0, viewportHeight, 0);
+			// Set the origin of the camera
+			_origin = lookFrom;
 
-			// Determine the lower left corner of the camera
-			_lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - vec3(0, 0, focalLength);
+			// Set the horizontal axis of the camera
+			_horizontal = viewportWidth * u;
+
+			// Set the vertical axis of the camera
+			_vertical = viewportHeight * v;
+
+			// Determine and set the lower left corner of the camera viewport
+			_lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - w;
 		}
 
 		/*

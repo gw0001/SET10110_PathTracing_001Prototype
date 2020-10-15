@@ -388,8 +388,14 @@ inline float dot(const vec3& vec1, const vec3& vec2)
 inline vec3 cross(const vec3& vec1, const vec3& vec2) 
 {
 	// Determine and return the value of the cross product
-	return vec3(vec1.getY() * vec2.getZ() - vec1.getZ() * vec1.getY(),
+	return vec3(
+		// X component of cross product
+		vec1.getY() * vec2.getZ() - vec1.getZ() * vec2.getY(),
+
+		// Y component of cross product
 		vec1.getZ() * vec2.getX() - vec1.getX() * vec2.getZ(),
+
+		// Z component of cross product
 		vec1.getX() * vec2.getY() - vec1.getY() * vec2.getX());
 }
 
@@ -407,7 +413,8 @@ inline vec3 unitVector(vec3 vec)
 /*
  * RANDOM IN UNIT SPHERE FUNCTION
  *
- * Funtion picks a random point in the 
+ * Funtion picks a random point and determines if it is
+ * within a unit sphere
  */
 vec3 randomInUnitSphere()
 {
