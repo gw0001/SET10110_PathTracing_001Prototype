@@ -32,6 +32,7 @@
 #include <limits>
 #include <memory>
 #include <cstdlib>
+#include <random>
 
 // **** COMMON USINGS **** //
 using std::shared_ptr;
@@ -60,6 +61,28 @@ inline float degreesToRadians(float degrees)
     return degrees * pi / 180.0;
 }
 
+
+/*
+ * RANDOM INT FUNCTION
+ *
+ * Function is used to create a random
+ * float between 1 and 5
+ */
+inline int randomInt(int min, int max)
+{
+    // Random Device
+    std::random_device rd;
+
+    // Mersenne Twister pseudo-random generator 
+    std::mt19937 mt(rd());
+
+    // Distribution
+    std::uniform_int_distribution<int> randomNum(min, max);
+
+    // Return random float
+    return randomNum(mt);
+}
+
 /*
  * RANDOM FLOAT FUNCTION
  *
@@ -68,8 +91,17 @@ inline float degreesToRadians(float degrees)
  */
 inline float randomFloat()
 {
-    // Returns a random real in (0,1).
-    return rand() / (RAND_MAX + 1.0);
+    // Random Device
+    std::random_device rd;
+
+    // Mersenne Twister pseudo-random generator 
+    std::mt19937 mt(rd());
+
+    // Distribution
+    std::uniform_real_distribution<float> randomNum(0.0, 1.0);
+
+    // Return random float
+    return randomNum(mt);
 }
 
 /*
@@ -79,10 +111,19 @@ inline float randomFloat()
  * float between a maximum and minimum
  * range
  */
-inline float randomFloat(double min, double max)
+inline float randomFloat(float min, float max)
 {
-    // Returns a random real in (min,max).
-    return min + (max - min) * randomFloat();
+    // Random Device
+    std::random_device rd;
+
+    // Mersenne Twister pseudo-random generator 
+    std::mt19937 mt(rd());
+
+    // Distribution
+    std::uniform_real_distribution<float> randomNum(min, max);
+
+    // Return random float
+    return randomNum(mt);
 }
 
 /*

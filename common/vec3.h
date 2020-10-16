@@ -32,6 +32,7 @@
 // Header files
 #include <cmath>
 #include <iostream>
+#include <random>
 
 // Namespace
 using std::sqrt;
@@ -242,13 +243,11 @@ class vec3
 		 * has random values between a specified maximum
 		 * and minimum value
 		 */
-		inline static vec3 randomVector(double min, double max)
+		inline static vec3 random(float min, float max)
 		{
 			// Return vector with random values between a set range
 			return vec3(randomFloat(min, max), randomFloat(min, max), randomFloat(min, max));
 		}
-
-
 
 	// Private
 	private:
@@ -293,14 +292,13 @@ inline std::ostream& operator<<(std::ostream& out, const vec3& vec)
  * Operator allows the values of two vectors to be added and the value
  * of the new vector is returned as a new vector
  */
-inline vec3 operator+(const vec3& vec1, const vec3& vec2) 
+inline vec3 operator+(const vec3& vec1, const vec3& vec2)
 {
 	// Determine and return the result of the addition of both vectors
-	return vec3((vec1.getX() + vec2.getX()), 
-		(vec1.getY() + vec2.getY()), 
+	return vec3((vec1.getX() + vec2.getX()),
+		(vec1.getY() + vec2.getY()),
 		(vec1.getZ() + vec2.getZ()));
 }
-
 /*
  * SUBTRACTION OPERATOR
  *
@@ -424,7 +422,7 @@ vec3 randomInUnitSphere()
 	while (true) 
 	{
 		// Obtain random point between -1 and 1
-		auto p = vec3::randomVector(-1, 1);
+		auto p = vec3::random(-1, 1);
 
 		// Check if point is in the unit sphere
 		if (p.lengthSquared() >= 1)

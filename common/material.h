@@ -124,7 +124,8 @@ class metal : public material
          * When invoked, creates a metal material object and sets the 
          * albedo colour and fuzz amount
          */
-        metal(const colour& a, float f) : _albedo(a), _fuzz(f < 1 ? f : 1) {}
+        metal(const colour& a, float f) 
+                : _albedo(a), _fuzz(f < 1 ? f : 1) {}
 
         /*
          * SCATTER FUNCTION
@@ -132,10 +133,10 @@ class metal : public material
          * Function to determine if a ray will produce a scatter ray upon
          * collision with an object
          */
-        virtual bool scatter(const ray& r_in, const hitRecord& rec, colour& attenuation, ray& scattered) const override
+        virtual bool scatter(const ray& rayIn, const hitRecord& rec, colour& attenuation, ray& scattered) const override
         {
             // Obtain the reflected vector
-            vec3 reflected = reflect(unitVector(r_in.getDirection()), rec.normal);
+            vec3 reflected = reflect(unitVector(rayIn.getDirection()), rec.normal);
 
             // Obtain the scattered ray
             scattered = ray(rec.p, reflected + _fuzz * randomInHemisphere(rec.normal));
@@ -188,7 +189,6 @@ class dielectric : public material
 
             // Determine the Refraction ratio
             float refractionRatio;
-            //double refractionRatio = rec.frontFace ? (1.0 / _indexOfRefraction) : _indexOfRefraction;
 
             // Check if front face has been hit
             if (rec.frontFace == true)
